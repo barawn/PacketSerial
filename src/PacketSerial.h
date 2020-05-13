@@ -269,15 +269,17 @@ public:
     /// \param size The number of bytes in the data buffer.
     void send(const uint8_t* buffer, size_t size) const
     {
-        if(_stream == nullptr || buffer == nullptr || size == 0) return;
+        if(_stream == nullptr || buffer == nullptr) return;
 
-        uint8_t _encodeBuffer[EncoderType::getEncodedBufferSize(size)];
+        if (size != 0) {
+            uint8_t _encodeBuffer[EncoderType::getEncodedBufferSize(size)];
 
-        size_t numEncoded = EncoderType::encode(buffer,
-                                                size,
-                                                _encodeBuffer);
+            size_t numEncoded = EncoderType::encode(buffer,
+                                                    size,
+                                                    _encodeBuffer);
 
-        _stream->write(_encodeBuffer, numEncoded);
+            _stream->write(_encodeBuffer, numEncoded);
+        }
         _stream->write(PacketMarker);
     }
 
